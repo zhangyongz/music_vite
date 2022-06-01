@@ -1,0 +1,220 @@
+.audio_player {
+  position: relative;
+
+  .audio_bar {
+    width: 100%;
+    height: 60px;
+    border-top: 2px solid #f5f5f5;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    z-index: 20;
+    background-color: #ffffff;
+  }
+
+  .audio_progress {
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-appearance: none;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #c4463a;
+      cursor: pointer;
+    }
+  }
+}
+
+.audio_controls {
+  flex: 0 0 atuo;
+  width: 150px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 15px;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  path {
+    fill: #c4463a;
+  }
+}
+
+.audio_profile {
+  flex: 1;
+  width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+
+  .profile_img_wrapper {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+
+    .profile_img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .pofile_img_mask {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0px;
+      background: rgba(158, 158, 158, 0.3);
+      backdrop-filter: blur(2px);
+      border-radius: 5px;
+    }
+  }
+
+  .proflie_info {
+    width: 0;
+    flex: 1;
+    margin-left: 10px;
+
+    .info_text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .title {
+        font-size: 16px;
+
+      }
+
+      .artist {
+        font-size: 12px;
+        color: #7f7f7f;
+      }
+    }
+
+    .info_time {
+      font-size: 12px;
+      color: #acacac;
+    }
+  }
+}
+
+.right_wrapper {
+  flex: 1;
+}
+
+// :root {
+//   --white: #fff;
+//   --active-color: #00aeb0;
+// }
+
+// * {
+//   box-sizing: border-box;
+// }
+
+// body {
+//   font-family: Arial, Helvetica, sans-serif;
+//   height: 100%;
+//   background: var(--active-color);
+//   transition: background 0.4s ease;
+// }
+
+
+
+// .audio-player {
+//   max-width: 350px;
+//   padding: 24px;
+//   border-radius: 20px;
+//   box-shadow: 0 28px 28px rgba(0, 0, 0, 0.2);
+//   margin: auto;
+//   color: var(--white);
+// }
+
+// .artwork {
+//   border-radius: 120px;
+//   display: block;
+//   margin: auto;
+//   height: 200px;
+//   width: 200px;
+// }
+
+// .track-info {
+//   text-align: center;
+//   z-index: 1;
+//   position: relative;
+// }
+
+// .title {
+//   font-weight: 700;
+//   margin-bottom: 4px;
+// }
+
+// .artist {
+//   font-weight: 300;
+//   margin-top: 0;
+// }
+
+// .audio-controls {
+//   display: flex;
+//   justify-content: space-between;
+//   width: 75%;
+//   margin: 0 auto 15px;
+// }
+
+// .audio-controls .prev svg,
+// .audio-controls .next svg {
+//   width: 35px;
+//   height: 35px;
+// }
+
+// .audio-controls .play svg,
+// .audio-controls .pause svg {
+//   height: 40px;
+//   width: 40px;
+// }
+
+// .audio-controls path {
+//   fill: var(--white);
+// }
+
+// .color-backdrop {
+//   background: linear-gradient(45deg, var(--active-color) 20%, transparent 100%)
+//     no-repeat;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   z-index: -1;
+// }
+
+// .color-backdrop.playing {
+//   animation: colorChange 20s alternate infinite;
+// }
+
+// @keyframes colorChange {
+//   from {
+//     filter: hue-rotate(0deg);
+//   }
+//   to {
+//     filter: hue-rotate(360deg);
+//   }
+// }

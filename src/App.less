@@ -1,0 +1,84 @@
+// @import '~antd/dist/antd.css';
+@import './assets/style/global.less';
+
+.App {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  padding-left: 200px;
+  padding-bottom: 60px;
+
+  .audio_menu {
+    flex: 0 0 auto;
+    width: 200px;
+    height: calc(~"100vh - 60px");
+    background-color: #ededed;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 5;
+
+    .menu_avatar {
+      margin: 5px 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .avatar {
+        flex: 0 0 auto;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .username {
+        margin-left: 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: 14px;
+      }
+    }
+
+    .menu_list {
+      margin: 10px 0;
+
+      .list_item {
+        height: 40px;
+        padding-left: 20px;
+        font-size: 14px;
+
+
+        .text {
+          margin-left: 10px;
+        }
+
+        &:hover {
+          background-color: #e6e6e6;
+        }
+
+        .link {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          cursor: default;
+          color: rgba(0, 0, 0, 0.85);
+        }
+
+        .active {
+          color: #d73223;
+        }
+      }
+    }
+  }
+
+  .qr_img {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .container {
+    flex: 1;
+  }
+}

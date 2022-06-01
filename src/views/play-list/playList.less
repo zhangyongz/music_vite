@@ -1,0 +1,59 @@
+.play_list_box {
+  .pannel {
+    padding: 15px 30px 30px;
+    display: flex;
+
+    .img {
+      width: 200px;
+      height: 200px;
+      border-radius: 5px;
+    }
+
+    .info {
+      margin-left: 30px;
+
+      .info_name {
+        display: flex;
+        align-items: center;
+      }
+
+      .info_name_label {
+        width: 40px;
+        flex: 0 0 atuo;
+        font-size: 12px;
+        color: #e65b4c;
+        border: 1px solid #e65b4c;
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        line-height: 1.5;
+      }
+
+      .info_name_text {
+        margin-left: 10px;
+        font-size: 24px;
+        color: #333333;
+        font-weight: 500;
+      }
+
+      .info_btn {
+        margin: 10px 0;
+      }
+
+      .info_tag,
+      .info_desc {
+        font-size: 12px;
+      }
+
+      .info_desc_text {
+        color: #666666;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+}

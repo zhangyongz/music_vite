@@ -1,0 +1,40 @@
+.rank_list {
+  padding: 10px;
+
+  .collection_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .collection_item {
+    width: 200px;
+    list-style-type: none;
+    margin: 10px 20px;
+    cursor: pointer;
+
+    &:hover {
+      .img {
+        transform: scale(1.2);
+      }
+      .text {
+        color: #e65b4c;
+      }
+    }
+
+    .img_wrapper {
+      height: 200px;
+      overflow: hidden;
+      .img {
+        width: 100%;
+        transition: all linear 0.3s;
+        
+      }
+    }
+
+    .text {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #616161;
+    }
+  }
+}
