@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import * as path from 'path'
 import * as fs from 'fs'
 import lessToJS from 'less-vars-to-js'
+import { reactI18n } from './plugins/vite-plugin-react-i18n'
 
 const themeVariables = lessToJS(
   fs.readFileSync(path.resolve(__dirname, './config/variables.less'), 'utf8')
@@ -12,7 +13,8 @@ const themeVariables = lessToJS(
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react()
+    react(),
+    reactI18n()
     // vitePluginImp({
     //   libList: [
     //     {
