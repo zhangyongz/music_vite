@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useContext, useMemo, useReducer } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import {
   ClockCircleOutlined,
@@ -7,12 +7,13 @@ import {
   LikeOutlined
 } from '@ant-design/icons'
 import { Spin, message } from 'antd'
+import i18n from 'vite-plugin-react-i18n/messages'
 
 import './App.less'
 import AudioPlayer from './components/audio/AudioPlayer'
 import Lyric from './components/lyric/Lyric'
 
-import { LoadingContext } from '@/commons/context'
+import { LoadingContext, LocaleContext } from '@/commons/context'
 
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { selectProfile, selectTracks, selectLoginShow, setLoginShow } from '@/store/features/users/usersSlice'
@@ -33,19 +34,22 @@ const AudioMenuComponent: React.FC = () => {
     dispatch(setLoginShow(val))
   }, [dispatch])
 
+  // i18n
+  const { t } = useContext(LocaleContext)
+
   return (
     <div className="audio_menu">
-      {
-        profile.userId
-          ? <div className="menu_avatar" onClick={loginHandle}>
-            <img src={profile.avatarUrl} alt="avatar" className="avatar" />
-            <p className="username">{profile.nickname}</p>
-          </div>
-          : <div className="menu_avatar" onClick={loginHandle}>
-            <UserOutlined style={{ fontSize: '30px' }} />
-            <p className="username">未登录</p>
-          </div>
-      }
+        {
+          profile.userId
+            ? <div className="menu_avatar" onClick={loginHandle}>
+              <img src={profile.avatarUrl} alt="avatar" className="avatar" />
+              <p className="username">{profile.nickname}</p>
+            </div>
+            : <div className="menu_avatar" onClick={loginHandle}>
+              <UserOutlined style={{ fontSize: '30px' }} />
+              <p className="username">未登录</p>
+            </div>
+        }
       <ul className="menu_list">
         <li className="list_item">
           <NavLink to="/"
@@ -53,7 +57,7 @@ const AudioMenuComponent: React.FC = () => {
               isActive ? 'active link' : 'link'
             }>
             <LikeOutlined style={{ fontSize: '20px' }} />
-            <span className="text">精品歌单</span>
+            <span className="text">{t('rank')}</span>
           </NavLink>
         </li>
         <li className="list_item">
@@ -62,7 +66,7 @@ const AudioMenuComponent: React.FC = () => {
               isActive ? 'active link' : 'link'
             }>
             <ClockCircleOutlined style={{ fontSize: '20px' }} />
-            <span className="text">最近播放</span>
+            <span className="text">{t('record')}</span>
           </NavLink>
         </li>
         <li className="list_item">
@@ -71,7 +75,7 @@ const AudioMenuComponent: React.FC = () => {
               isActive ? 'active link' : 'link'
             }>
             <CustomerServiceOutlined style={{ fontSize: '20px' }} />
-            <span className="text">我的歌单</span>
+            <span className="text">{t('collection')}</span>
           </NavLink>
         </li>
       </ul>
@@ -91,6 +95,43 @@ const App: React.FC = () => {
       setLoading(val)
     }
   }
+
+  interface LocaleAction {
+    type: 'toggle',
+    value: string
+  }
+
+  // i18n
+  const useI18n = () => {
+    const localeVal = localStorage.getItem('locale') || 'en'
+    // const [locale, setLocale] = useState(localeVal)
+    const [locale, dispatchLocale] = useReducer((state: string, action: LocaleAction) => {
+      switch (action.type) {
+        case 'toggle':
+          localStorage.setItem('locale', action.value)
+          return action.value
+        default:
+          throw new Error()
+      }
+    }, localeVal)
+
+    const t = (msg: string) => {
+      return useMemo(() => {
+        return i18n[locale][msg]
+      }, [locale, msg])
+    }
+
+    const setLocale = useCallback((value: string) => {
+      dispatchLocale({
+        type: 'toggle',
+        value
+      })
+    }, [])
+
+    return { locale, setLocale, t }
+  }
+  const { locale, setLocale, t } = useI18n()
+  const localeContextValue = { i18n, locale, setLocale, t }
 
   // track
   const tracks = useAppSelector(selectTracks)
@@ -112,17 +153,19 @@ const App: React.FC = () => {
 
   return (
     <LoadingContext.Provider value={loadingContextValue}>
-      <Spin spinning={loading}>
-        <div className="App">
-          <AudioMenu></AudioMenu>
-          <AudioPlayer trackIndex={trackIndex} setTrackIndex={setTrackIndex}
-            audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}></AudioPlayer>
-          <Lyric trackIndex={trackIndex} audioRef={audioRef} isPlaying={isPlaying}></Lyric>
-          <div className="container">
-            <Outlet />
+      <LocaleContext.Provider value={localeContextValue}>
+        <Spin spinning={loading}>
+          <div className="App">
+            <AudioMenu></AudioMenu>
+            <AudioPlayer trackIndex={trackIndex} setTrackIndex={setTrackIndex}
+              audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}></AudioPlayer>
+            <Lyric trackIndex={trackIndex} audioRef={audioRef} isPlaying={isPlaying}></Lyric>
+            <div className="container">
+              <Outlet />
+            </div>
           </div>
-        </div>
-      </Spin>
+        </Spin>
+      </LocaleContext.Provider>
     </LoadingContext.Provider>
   )
 }

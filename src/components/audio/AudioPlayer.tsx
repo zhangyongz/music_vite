@@ -7,6 +7,7 @@ import './style.less'
 import type { artist } from '@/types'
 import { selectTracks } from '@/store/features/users/usersSlice'
 import { audioSrcPrefix } from '@/commons/const'
+import LocaleSelect from '@/components/locale-select/LocaleSelect'
 
 interface AudioPlayProps {
   trackIndex: number,
@@ -152,7 +153,9 @@ const AudioPlayer: React.FC<AudioPlayProps> = ({
         >
         </AudioControls>
 
-        <div className="right_wrapper"></div>
+        <div className="right_wrapper">
+          <LocaleSelect></LocaleSelect>
+        </div>
 
         <input
           type="range"

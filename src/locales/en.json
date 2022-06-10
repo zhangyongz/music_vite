@@ -1,3 +1,5 @@
 {
-  "hello": "Hello World!"
+  "rank": "rank",
+  "record": "record",
+  "collection": "collection"
 }
