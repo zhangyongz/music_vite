@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useContext, useMemo, useReducer } from 'react'
+import React, { useState, useRef, useCallback, useContext } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import {
   ClockCircleOutlined,
@@ -7,11 +7,11 @@ import {
   LikeOutlined
 } from '@ant-design/icons'
 import { Spin, message } from 'antd'
-import i18n from 'vite-plugin-react-i18n/messages'
 
 import './App.less'
 import AudioPlayer from './components/audio/AudioPlayer'
 import Lyric from './components/lyric/Lyric'
+import LocaleProvider from './components/LocaleProvider'
 
 import { LoadingContext, LocaleContext } from '@/commons/context'
 
@@ -39,17 +39,17 @@ const AudioMenuComponent: React.FC = () => {
 
   return (
     <div className="audio_menu">
-        {
-          profile.userId
-            ? <div className="menu_avatar" onClick={loginHandle}>
-              <img src={profile.avatarUrl} alt="avatar" className="avatar" />
-              <p className="username">{profile.nickname}</p>
-            </div>
-            : <div className="menu_avatar" onClick={loginHandle}>
-              <UserOutlined style={{ fontSize: '30px' }} />
-              <p className="username">未登录</p>
-            </div>
-        }
+      {
+        profile.userId
+          ? <div className="menu_avatar" onClick={loginHandle}>
+            <img src={profile.avatarUrl} alt="avatar" className="avatar" />
+            <p className="username">{profile.nickname}</p>
+          </div>
+          : <div className="menu_avatar" onClick={loginHandle}>
+            <UserOutlined style={{ fontSize: '30px' }} />
+            <p className="username">未登录</p>
+          </div>
+      }
       <ul className="menu_list">
         <li className="list_item">
           <NavLink to="/"
@@ -96,43 +96,6 @@ const App: React.FC = () => {
     }
   }
 
-  interface LocaleAction {
-    type: 'toggle',
-    value: string
-  }
-
-  // i18n
-  const useI18n = () => {
-    const localeVal = localStorage.getItem('locale') || 'en'
-    // const [locale, setLocale] = useState(localeVal)
-    const [locale, dispatchLocale] = useReducer((state: string, action: LocaleAction) => {
-      switch (action.type) {
-        case 'toggle':
-          localStorage.setItem('locale', action.value)
-          return action.value
-        default:
-          throw new Error()
-      }
-    }, localeVal)
-
-    const t = (msg: string) => {
-      return useMemo(() => {
-        return i18n[locale][msg]
-      }, [locale, msg])
-    }
-
-    const setLocale = useCallback((value: string) => {
-      dispatchLocale({
-        type: 'toggle',
-        value
-      })
-    }, [])
-
-    return { locale, setLocale, t }
-  }
-  const { locale, setLocale, t } = useI18n()
-  const localeContextValue = { i18n, locale, setLocale, t }
-
   // track
   const tracks = useAppSelector(selectTracks)
   const [trackIndex, setTrackIndex] = useState(0)
@@ -152,8 +115,8 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   return (
-    <LoadingContext.Provider value={loadingContextValue}>
-      <LocaleContext.Provider value={localeContextValue}>
+    <LocaleProvider>
+      <LoadingContext.Provider value={loadingContextValue}>
         <Spin spinning={loading}>
           <div className="App">
             <AudioMenu></AudioMenu>
@@ -165,8 +128,8 @@ const App: React.FC = () => {
             </div>
           </div>
         </Spin>
-      </LocaleContext.Provider>
-    </LoadingContext.Provider>
+      </LoadingContext.Provider>
+    </LocaleProvider>
   )
 }
 
