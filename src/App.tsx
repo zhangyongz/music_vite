@@ -11,7 +11,8 @@ import { Spin, message } from 'antd'
 import './App.less'
 import AudioPlayer from './components/audio/AudioPlayer'
 import Lyric from './components/lyric/Lyric'
-import LocaleProvider from './components/LocaleProvider'
+// import LocaleProvider from './components/LocaleProvider'
+import { withLocale } from './components/withLocale'
 
 import { LoadingContext, LocaleContext } from '@/commons/context'
 
@@ -115,22 +116,22 @@ const App: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   return (
-    <LocaleProvider>
-      <LoadingContext.Provider value={loadingContextValue}>
-        <Spin spinning={loading}>
-          <div className="App">
-            <AudioMenu></AudioMenu>
-            <AudioPlayer trackIndex={trackIndex} setTrackIndex={setTrackIndex}
-              audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}></AudioPlayer>
-            <Lyric trackIndex={trackIndex} audioRef={audioRef} isPlaying={isPlaying}></Lyric>
-            <div className="container">
-              <Outlet />
-            </div>
+    // <LocaleProvider>
+    <LoadingContext.Provider value={loadingContextValue}>
+      <Spin spinning={loading}>
+        <div className="App">
+          <AudioMenu></AudioMenu>
+          <AudioPlayer trackIndex={trackIndex} setTrackIndex={setTrackIndex}
+            audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}></AudioPlayer>
+          <Lyric trackIndex={trackIndex} audioRef={audioRef} isPlaying={isPlaying}></Lyric>
+          <div className="container">
+            <Outlet />
           </div>
-        </Spin>
-      </LoadingContext.Provider>
-    </LocaleProvider>
+        </div>
+      </Spin>
+    </LoadingContext.Provider>
+    // </LocaleProvider>
   )
 }
 
-export default App
+export default withLocale(App)
