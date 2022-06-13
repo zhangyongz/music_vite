@@ -39,7 +39,7 @@ const AudioPlayer: React.FC<AudioPlayProps> = ({
   }, [tracks, trackIndex])
 
   const intervalRef = useRef<undefined | number>()
-  const isReady = useRef(false)
+  // const isReady = useRef(false)
 
   const { duration, currentTime } = audioRef.current
 
@@ -102,18 +102,16 @@ const AudioPlayer: React.FC<AudioPlayProps> = ({
   }, [tracks, setTrackIndex])
 
   useEffect(() => {
-    audioRef.current.pause()
+    // audioRef.current.pause()
 
     // audioRef.current = new Audio(audioSrc)
     audioRef.current.src = audioSrc
     setTrackProgress(audioRef.current.currentTime)
 
-    if (isReady.current) {
+    if (isPlaying) {
       audioRef.current.play()
-      setIsPlaying(true)
+      // setIsPlaying(true)
       // startTimer()
-    } else {
-      isReady.current = true
     }
   }, [trackIndex, tracks, audioRef, audioSrc, setIsPlaying])
 
