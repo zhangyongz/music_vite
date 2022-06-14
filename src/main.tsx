@@ -15,10 +15,11 @@ import {
 import { createBrowserHistory } from 'history'
 
 import { PrivateRoute } from '@/components/PrivateRoute'
-import Record from './views/record/Record'
-import Collection from './views/collection/Collection'
-import PlayList from './views/play-list/PlayList'
-import Rank from './views/rank/Rank'
+
+const Rank = React.lazy(() => import('./views/rank/Rank'))
+const Record = React.lazy(() => import('./views/record/Record'))
+const Collection = React.lazy(() => import('./views/collection/Collection'))
+const PlayList = React.lazy(() => import('./views/play-list/PlayList'))
 
 const history = createBrowserHistory({ window })
 
@@ -30,14 +31,14 @@ ReactDOM
     <React.StrictMode>
       <Provider store={store}>
         <HistoryRouter basename={import.meta.env.BASE_URL} history={history}>
-          <Routes>
-            <Route path="/" element={<PrivateRoute component={App} />}>
-              <Route path="" element={<PrivateRoute component={Rank} />} />
-              <Route path="record" element={<PrivateRoute component={Record} needAuth={true} path="record" />} />
-              <Route path="collection" element={<PrivateRoute component={Collection} needAuth={true} path="collection" />} />
-              <Route path="play-list" element={<PrivateRoute component={PlayList} />} />
-            </Route>
-          </Routes>
+            <Routes>
+              <Route path="/" element={<PrivateRoute component={App} />}>
+                <Route path="" element={<PrivateRoute component={Rank} />} />
+                <Route path="record" element={<PrivateRoute component={Record} needAuth={true} path="record" />} />
+                <Route path="collection" element={<PrivateRoute component={Collection} needAuth={true} path="collection" />} />
+                <Route path="play-list" element={<PrivateRoute component={PlayList} />} />
+              </Route>
+            </Routes>
         </HistoryRouter>
       </Provider>
     </React.StrictMode>

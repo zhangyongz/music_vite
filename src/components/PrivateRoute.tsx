@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { setLyricShow, selectUid, setLoginShow } from "@/store/features/users/usersSlice";
+import { useAppSelector, useAppDispatch } from '@/store/hooks'
+import { setLyricShow, selectUid, setLoginShow } from '@/store/features/users/usersSlice'
 
 interface Props {
   component: React.ComponentType
@@ -15,19 +15,21 @@ export const PrivateRoute: React.FC<Props> = ({
   needAuth = false,
   path
 }) => {
-  const uid = useAppSelector(selectUid);
-  const dispatch = useAppDispatch();
+  const uid = useAppSelector(selectUid)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(setLyricShow(false));
+    dispatch(setLyricShow(false))
     if (!uid && needAuth) {
-      dispatch(setLoginShow(true));
+      dispatch(setLoginShow(true))
     }
-  });
+  })
 
   if (uid || !needAuth) {
-    return <RouteComponent />;
+    return (
+        <RouteComponent />
+    )
   } else {
-    return <Navigate to={`/?path=${path}`} replace={true} />;
+    return <Navigate to={`/?path=${path}`} replace={true} />
   }
-};
+}

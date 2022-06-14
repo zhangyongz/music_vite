@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useContext } from 'react'
+import React, { useState, useRef, useCallback, useContext, Suspense } from 'react'
 import { Outlet, NavLink } from 'react-router-dom'
 import {
   ClockCircleOutlined,
@@ -125,7 +125,9 @@ const App: React.FC = () => {
             audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}></AudioPlayer>
           <Lyric trackIndex={trackIndex} audioRef={audioRef} isPlaying={isPlaying}></Lyric>
           <div className="container">
-            <Outlet />
+            <Suspense fallback={<Spin className="spin_wrapper" />}>
+              <Outlet />
+            </Suspense>
           </div>
         </div>
       </Spin>
