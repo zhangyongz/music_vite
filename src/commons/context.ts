@@ -1,7 +1,8 @@
 import React from 'react'
 
 export const LoadingContext = React.createContext({
-  toggleLoading: (val: boolean) => {}
+  toggleLoading: (val: boolean) => {},
+  toggleIsPlaying: (val: boolean) => {}
 })
 
 export const LocaleContext = React.createContext({

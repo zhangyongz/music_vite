@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Spin } from 'antd'
 
@@ -9,6 +9,7 @@ import { playlistDetail, playlistTrack } from '@/commons/api'
 import { setTracks } from '@/store/features/users/usersSlice'
 import './playList.less'
 import { playListInfoInterface } from '@/types'
+import { LoadingContext } from '@/commons/context'
 
 const PlayList: React.FC = () => {
   const [listData, setListData] = useState([])
@@ -48,8 +49,11 @@ const PlayList: React.FC = () => {
     init()
   }, [])
 
+  const { toggleIsPlaying } = useContext(LoadingContext)
+
   const handleClick = useCallback(() => {
     dispatch(setTracks(listData))
+    toggleIsPlaying(true)
   }, [listData, dispatch])
 
   return (

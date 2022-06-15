@@ -91,11 +91,6 @@ const AudioMenu = React.memo(AudioMenuComponent)
 const App: React.FC = () => {
   // loading
   const [loading, setLoading] = useState(false)
-  const loadingContextValue = {
-    toggleLoading: (val: boolean) => {
-      setLoading(val)
-    }
-  }
 
   // track
   const tracks = useAppSelector(selectTracks)
@@ -114,6 +109,15 @@ const App: React.FC = () => {
     })
   }
   const [isPlaying, setIsPlaying] = useState(false)
+
+  const loadingContextValue = {
+    toggleLoading: (val: boolean) => {
+      setLoading(val)
+    },
+    toggleIsPlaying: (val: boolean) => {
+      setIsPlaying(val)
+    }
+  }
 
   return (
     // <LocaleProvider>
