@@ -5,7 +5,7 @@ import { Spin } from 'antd'
 import List from '@/components/list/List'
 import PlayBtn from '@/components/play-btn/PlayBtn'
 import { useAppDispatch } from '@/store/hooks'
-import { playlistDetail } from '@/commons/api'
+import { playlistDetail, playlistTrack } from '@/commons/api'
 import { setTracks } from '@/store/features/users/usersSlice'
 import './playList.less'
 import { playListInfoInterface } from '@/types'
@@ -22,27 +22,35 @@ const PlayList: React.FC = () => {
   const [searchParams] = useSearchParams()
   const [loading, setLoading] = useState(false)
 
+  // init
   const id = searchParams.get('id')
-  const getPlaylistDetail = useCallback(async () => {
-    setLoading(true)
-    const { code, playlist } = await playlistDetail({
+  const getPlaylistDetail = useCallback(() => {
+    return playlistDetail({
       id
     })
-    setLoading(false)
-    if (code === 200) {
-      // console.log(playlist);
-      setInfo(playlist)
-      setListData(playlist.tracks)
-    }
   }, [id])
+  const getPlaylistTrack = useCallback(() => {
+    return playlistTrack({
+      id
+    })
+  }, [])
+  const init = useCallback(async () => {
+    setLoading(true)
+    const res = await Promise.all([getPlaylistDetail(), getPlaylistTrack()])
+    setLoading(false)
+    if (res[0].code === 200 && res[1].code === 200) {
+      setInfo(res[0].playlist)
+      setListData(res[1].songs)
+    }
+  }, [])
+
+  useEffect(() => {
+    init()
+  }, [])
 
   const handleClick = useCallback(() => {
     dispatch(setTracks(listData))
   }, [listData, dispatch])
-
-  useEffect(() => {
-    getPlaylistDetail()
-  }, [getPlaylistDetail])
 
   return (
     <div className="play_list_box">
