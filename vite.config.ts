@@ -14,9 +14,6 @@ const themeVariables = lessToJS(
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  console.log(command)
-  console.log(mode)
-
   return {
     base: mode === 'development' ? '/' : '/music-app/',
     plugins: [
@@ -55,6 +52,17 @@ export default defineConfig(({ command, mode }) => {
       alias: [
         { find: /^@\//, replacement: `${path.resolve(__dirname, './src')}/` }
       ]
+    },
+    build: {
+      rollupOptions: {
+        external: ['react', 'react-dom'],
+        output: {
+          globals: {
+            react: 'React',
+            'react-dom': 'ReactDOM'
+          }
+        }
+      }
     }
   }
 })
