@@ -1,47 +1,47 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { Spin } from "antd";
+import React, { useCallback, useEffect, useState } from 'react'
+import { useAppSelector, useAppDispatch } from '@/store/hooks'
+import { Spin } from 'antd'
 
-import { userRecord } from "@/commons/api";
-import { selectUid, setTracks } from "@/store/features/users/usersSlice";
-import List from "@/components/list/List";
-import "./record.less";
-import PlayBtn from "@/components/play-btn/PlayBtn";
+import { userRecord } from '@/commons/api'
+import { selectUid, setTracks } from '@/store/features/users/usersSlice'
+import List from '@/components/list/List'
+import './record.less'
+import PlayBtn from '@/components/play-btn/PlayBtn'
 
 const Record: React.FC = () => {
-  const uid = useAppSelector(selectUid);
-  const [listData, setListData] = useState([]);
-  const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(false); 
+  const uid = useAppSelector(selectUid)
+  const [listData, setListData] = useState([])
+  const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState(false)
 
   const getRecordList = useCallback(async () => {
     if (!uid) {
-      return;
+      return
     }
-    setLoading(true);
+    setLoading(true)
     const { code, weekData } = await userRecord({
       uid,
-      type: "1"
-    });
-    setLoading(false);
+      type: '1'
+    })
+    setLoading(false)
     if (code === 200) {
       // console.log(weekData);
       weekData.forEach((item: any) => {
         for (const key in item.song) {
-          item[key] = item.song[key];
+          item[key] = item.song[key]
         }
-      });
-      setListData(weekData);
+      })
+      setListData(weekData)
     }
-  }, [uid]);
+  }, [uid])
 
   useEffect(() => {
-    getRecordList();
-  }, [getRecordList]);
+    getRecordList()
+  }, [getRecordList])
 
   const handleClick = useCallback(() => {
-    dispatch(setTracks(listData));
-  }, [listData, dispatch]);
+    dispatch(setTracks(listData))
+  }, [listData, dispatch])
 
   return (
     <div className="record_box">
@@ -51,7 +51,7 @@ const Record: React.FC = () => {
         <List data={listData}></List>
       </Spin>
     </div>
-  );
-};
+  )
+}
 
-export default Record;
+export default Record
