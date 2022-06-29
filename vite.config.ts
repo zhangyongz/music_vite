@@ -37,7 +37,7 @@ export default defineConfig(({ command, mode }) => {
     },
 
     build: {
-      sourcemap: true,
+      // sourcemap: true,
       // minify: false,
       rollupOptions: {
         // external: ['react', 'react-dom'],
@@ -68,6 +68,7 @@ export default defineConfig(({ command, mode }) => {
         }
       }
     },
+
     plugins: [
       react(),
       reactI18n(),

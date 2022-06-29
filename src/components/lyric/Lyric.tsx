@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 
-import "./lyric.less";
-import { useAppSelector } from "@/store/hooks";
-import { selectLyricShow, selectTracks } from "@/store/features/users/usersSlice";
-import { getLyric } from "@/commons/api";
+import './lyric.less'
+import { useAppSelector } from '@/store/hooks'
+import { selectLyricShow, selectTracks } from '@/store/features/users/usersSlice'
+import { getLyric } from '@/commons/api'
 // import img from '../../assets/images/wallhaven-y8wdlx.jpeg'
-import { track } from "@/types";
-import { scrollTopTo } from "@/commons/utils";
+import { track } from '@/types'
+import { scrollTopTo } from '@/commons/utils'
 
 interface LyricProps {
   trackIndex: number,
@@ -20,37 +20,36 @@ interface lyricItemInterface {
 }
 
 // 歌词解析
-const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g;
-function parseLyric(lrc: string) {
-  const lines = lrc.split("\n");
-  const lyric = [];
+const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
+function parseLyric (lrc: string) {
+  const lines = lrc.split('\n')
+  const lyric = []
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const result = timeExp.exec(line);
+    const line = lines[i]
+    const result = timeExp.exec(line)
     if (!result) {
-      continue;
+      continue
     }
-    const text = line.replace(timeExp, "").trim();
+    const text = line.replace(timeExp, '').trim()
     // if (text) {
     lyric.push({
       time: (parseFloat(result[1]) * 6e4 + parseFloat(result[2]) * 1e3 + (parseFloat(result[3]) || 0) * 1) / 1e3,
       text
-    });
+    })
     // }
   }
-  return lyric;
+  return lyric
 }
 
-
 const Lyric: React.FC<LyricProps> = ({ trackIndex, audioRef, isPlaying }) => {
-  const tracks = useAppSelector(selectTracks);
+  const tracks = useAppSelector(selectTracks)
   const song: track = useMemo(() => {
-    return tracks[trackIndex];
-  }, [tracks, trackIndex]);
+    return tracks[trackIndex]
+  }, [tracks, trackIndex])
 
   // 歌词
   // const [lyric, setLyric] = useState<lyricItemInterface[]>([])
-  const lyric = useRef<lyricItemInterface[]>([]);
+  const lyric = useRef<lyricItemInterface[]>([])
   // async function getLyricHandle() {
   //   if (!song) {
   //     return;
@@ -65,116 +64,115 @@ const Lyric: React.FC<LyricProps> = ({ trackIndex, audioRef, isPlaying }) => {
   // }
   const getLyricHandle = useCallback(async () => {
     if (!song) {
-      return;
+      return
     }
     const res = await getLyric({
       id: song.id.toString()
-    });
+    })
     if (res.code === 200) {
       // setLyric(parseLyric(res.lrc.lyric))
-      lyric.current = parseLyric(res.lrc.lyric);
+      lyric.current = parseLyric(res.lrc.lyric)
     }
-  }, [song]);
+  }, [song])
   useEffect(() => {
-    getLyricHandle();
-  }, [getLyricHandle]);
+    getLyricHandle()
+  }, [getLyricHandle])
 
   // 展示
-  const lyricShow = useAppSelector(selectLyricShow);
+  const lyricShow = useAppSelector(selectLyricShow)
   useEffect(() => {
-    let val = "auto";
+    let val = 'auto'
     if (lyricShow) {
-      val = "hidden";
+      val = 'hidden'
     }
-    window.document.body.style.overflow = val;
-  }, [lyricShow]);
-  const className = lyricShow ? "active" : "deactive";
+    window.document.body.style.overflow = val
+  }, [lyricShow])
+  const className = lyricShow ? 'active' : 'deactive'
 
   // 歌词高亮
-  const [lyricIndex, setLyricIndex] = useState(0);
-  const intervalRef = useRef<undefined | number>();
+  const [lyricIndex, setLyricIndex] = useState(0)
+  const intervalRef = useRef<undefined | number>()
 
   const startTimer = useCallback(() => {
-    clearInterval(intervalRef.current);
+    clearInterval(intervalRef.current)
     intervalRef.current = window.setInterval(() => {
       if (audioRef.current.ended) {
-        return;
+        return
       }
-      const { currentTime } = audioRef.current;
+      const { currentTime } = audioRef.current
       const index = lyric.current.findIndex((item) => {
-        return item.time > currentTime;
-      });
-      setLyricIndex(index - 1 || 0);
-    }, 500);
-  }, [audioRef]);
+        return item.time > currentTime
+      })
+      setLyricIndex(index - 1 || 0)
+    }, 500)
+  }, [audioRef])
   useEffect(() => {
     if (isPlaying) {
-      startTimer();
+      startTimer()
     } else {
-      clearInterval();
+      clearInterval()
     }
-  }, [isPlaying, startTimer]);
+  }, [isPlaying, startTimer])
 
   // 歌词滚动
-  const listWrapper = useRef<HTMLDivElement>(null);
-  const [midIndex, setMidIndex] = useState(0);
+  const listWrapper = useRef<HTMLDivElement>(null)
+  const [midIndex, setMidIndex] = useState(0)
   useEffect(() => {
-    const offsetHeight = listWrapper.current?.offsetHeight || 0;
+    const offsetHeight = listWrapper.current?.offsetHeight || 0
     // console.log(offsetHeight);
-    setMidIndex(Math.floor(offsetHeight / 2 / 28));
-  }, []);
+    setMidIndex(Math.floor(offsetHeight / 2 / 28))
+  }, [])
   useEffect(() => {
-    const distanceIndex = lyricIndex - midIndex - 1;
+    const distanceIndex = lyricIndex - midIndex - 1
     // console.log(distanceIndex);
     if (distanceIndex > 0) {
       if (listWrapper.current) {
-        scrollTopTo(listWrapper.current, distanceIndex * 28);
+        scrollTopTo(listWrapper.current, distanceIndex * 28)
         // listWrapper.current.scrollTop = (distanceIndex * 28)
       }
     }
-  }, [lyricIndex, midIndex]);
+  }, [lyricIndex, midIndex])
 
   // 歌词布局
-  const infoTitle = useRef<HTMLDivElement>(null);
-  const [topPx, setTopPx] = useState(0);
+  const infoTitle = useRef<HTMLDivElement>(null)
+  const [topPx, setTopPx] = useState(0)
   useEffect(() => {
     setTimeout(() => {
-      let px = infoTitle.current?.getBoundingClientRect().bottom || 0;
-      px += 10;
-      setTopPx(px);
-    },500);
-  }, [song, lyricShow]);
-  
+      let px = infoTitle.current?.getBoundingClientRect().bottom || 0
+      px += 10
+      setTopPx(px)
+    }, 500)
+  }, [song, lyricShow])
 
   return (
-    <div className={"lyric_box " + className}>
+    <div className={'lyric_box ' + className}>
       <div className="lyric_container">
         <div className="cover_img">
-          <img src={song?.al.picUrl} alt="coverImg" className={"img " + (isPlaying ? "rotate" : "")} />
+          <img src={song?.al.picUrl} alt="coverImg" className={'img ' + (isPlaying ? 'rotate' : '')} />
         </div>
 
         <div className="info_wrapper">
           <div className="info_title" ref={infoTitle}>
             <p className="name">{song?.name}</p>
             <p className="label">专辑：{song?.al.name} 歌手：{song?.ar.map((item) => {
-              return item.name;
-            }).join(" / ")}</p>
+              return item.name
+            }).join(' / ')}</p>
           </div>
 
-          <div className="lyric_list_wrapper" ref={listWrapper} style={{top: topPx}}>
+          <div className="lyric_list_wrapper" ref={listWrapper} style={{ top: topPx }}>
             <div className="lyric_list">
               {lyric.current.map((item, index) => {
-                const active = index === lyricIndex ? "active" : "";
+                const active = index === lyricIndex ? 'active' : ''
                 return (
-                  <p key={index} className={"lyric_item " + active}>{item.text}</p>
-                );
+                  <p key={index} className={'lyric_item ' + active}>{item.text}</p>
+                )
               })}
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Lyric;
+export default Lyric
